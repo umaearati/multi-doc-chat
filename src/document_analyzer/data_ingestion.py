@@ -88,6 +88,7 @@ if __name__ == "__main__":
         print(saved_path)
         
         content=handler.read_pdf(saved_path)
+        content = content[:12000] 
         print("PDF Content:")
         print(content[:500])  # Print first 500 characters of the PDF content
         

@@ -1,54 +1,55 @@
-# Test code for document ingestion and analysis using a PDFHandler and DocumentAnalyzer
+# # Test code for document ingestion and analysis using a PDFHandler and DocumentAnalyzer
 
-import os
-from pathlib import Path
-from src.document_analyzer.data_ingestion import DocumentHandler       # Your PDFHandler class
-from src.document_analyzer.data_analysis import DocumentAnalyzer  # Your DocumentAnalyzer class
+# import os
+# from pathlib import Path
+# from src.document_analyzer.data_ingestion import DocumentHandler       # Your PDFHandler class
+# from src.document_analyzer.data_analysis import DocumentAnalyzer  # Your DocumentAnalyzer class
 
-# Path to the PDF you want to test
-PDF_PATH = r"/Users/nanimahi/multi-doc-chat/data/sample.pdf"
+# # Path to the PDF you want to test
+# PDF_PATH = r"/Users/nanimahi/multi-doc-chat/data/sample.pdf"
 
-# Dummy file wrapper to simulate uploaded file (Streamlit style)
-class DummyFile:
-    def __init__(self, file_path):
-        self.name = Path(file_path).name
-        self._file_path = file_path
+# # Dummy file wrapper to simulate uploaded file (Streamlit style)
+# class DummyFile:
+#     def __init__(self, file_path):
+#         self.name = Path(file_path).name
+#         self._file_path = file_path
 
-    def getbuffer(self):
-        return open(self._file_path, "rb").read()
+#     def getbuffer(self):
+#         return open(self._file_path, "rb").read()
 
-def main():
-    try:
-        # ---------- STEP 1: DATA INGESTION ----------
-        print("Starting PDF ingestion...")
-        dummy_pdf = DummyFile(PDF_PATH)
+# def main():
+#     try:
+#         # ---------- STEP 1: DATA INGESTION ----------
+#         print("Starting PDF ingestion...")
+#         dummy_pdf = DummyFile(PDF_PATH)
 
-        handler = DocumentHandler(session_id="test_ingestion_analysis")
+#         handler = DocumentHandler(session_id="test_ingestion_analysis")
         
-        saved_path = handler.save_pdf(dummy_pdf)
-        print(f"PDF saved at: {saved_path}")
+#         saved_path = handler.save_pdf(dummy_pdf)
+#         print(f"PDF saved at: {saved_path}")
 
-        text_content = handler.read_pdf(saved_path)
-        print(f"Extracted text length: {len(text_content)} chars\n")
+#         text_content = handler.read_pdf(saved_path)
+#         text_content = text_content[:8000] 
+#         print(f"Extracted text length: {len(text_content)} chars\n")
 
-        # ---------- STEP 2: DATA ANALYSIS ----------
-        print("Starting metadata analysis...")
-        analyzer = DocumentAnalyzer()  # Loads LLM + parser
+#         # ---------- STEP 2: DATA ANALYSIS ----------
+#         print("Starting metadata analysis...")
+#         analyzer = DocumentAnalyzer()  # Loads LLM + parser
         
-        analysis_result = analyzer.analyze_document(text_content)
+#         analysis_result = analyzer.analyze_document(text_content)
 
-        # ---------- STEP 3: DISPLAY RESULTS ----------
-        print("\n=== METADATA ANALYSIS RESULT ===")
-        for key, value in analysis_result.items():
-            print(f"{key}: {value}")
+#         # ---------- STEP 3: DISPLAY RESULTS ----------
+#         print("\n=== METADATA ANALYSIS RESULT ===")
+#         for key, value in analysis_result.items():
+#             print(f"{key}: {value}")
 
-    except Exception as e:
-        print(f"Test failed: {e}")
+#     except Exception as e:
+#         print(f"Test failed: {e}")
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
 
-## Testing code for document comparison using LLMs
+# Testing code for document comparison using LLMs
 
 # import io
 # from pathlib import Path
@@ -61,8 +62,8 @@ if __name__ == "__main__":
 
 # # ---- Step 1: Save and combine PDFs ---- #
 # def test_compare_documents():
-#     ref_path = Path("C:\\Complete_Content2\\llmops_batch\\document_portal\\data\\document_compare\\Long_Report_V1.pdf")
-#     act_path = Path("C:\\Complete_Content2\\llmops_batch\\document_portal\\data\\document_compare\\Long_Report_V2.pdf")
+#     ref_path = Path("/Users/nanimahi/multi-doc-chat/data/document_compare/Long_Report_V1-1.pdf")
+#     act_path = Path("/Users/nanimahi/multi-doc-chat/data/document_compare/Long_Report_V2-1.pdf")
 
 #     # Wrap them like Streamlit UploadedFile-style
 #     class FakeUpload:
@@ -138,7 +139,7 @@ if __name__ == "__main__":
     
 # if __name__ == "__main__":
 #     # Example PDF path and question
-#     pdf_path = "data\\single_document_chat\\NIPS-2017-attention-is-all-you-need-Paper.pdf"
+#     pdf_path = "/Users/nanimahi/multi-doc-chat/data/single_document_chat/sample.pdf"
 #     question = "What is the significance of the attention mechanism? can you explain it in simple terms?"
 
 #     if not Path(pdf_path).exists():
@@ -149,62 +150,62 @@ if __name__ == "__main__":
 #     test_conversational_rag_on_pdf(pdf_path, question)
     
     
-## testing for multidoc chat
-# import sys
-# from pathlib import Path
-# from src.multi_document_chat.data_ingestion import DocumentIngestor
-# from src.multi_document_chat.retrieval import ConversationalRAG
+# testing for multidoc chat
+import sys
+from pathlib import Path
+from src.multi_document_chat.data_ingestion import DocumentIngestor
+from src.multi_document_chat.retrieval import ConversationalRAG
 
-# def test_document_ingestion_and_rag():
-#     try:
-#         test_files = [
-#             "data\\multi_doc_chat\\market_analysis_report.docx",
-#             "data\\multi_doc_chat\\NIPS-2017-attention-is-all-you-need-Paper.pdf",
-#             "data\\multi_doc_chat\\sample.pdf",
-#             "data\\multi_doc_chat\\state_of_the_union.txt"
-#         ]
+def test_document_ingestion_and_rag():
+    try:
+        test_files = [
+            "/Users/nanimahi/multi-doc-chat/data/multi_doc_chat/sample.pdf",
+            "/Users/nanimahi/multi-doc-chat/data/multi_doc_chat/state_of_the_union.txt",
+            "/Users/nanimahi/multi-doc-chat/data/multi_doc_chat/NIPS-2017-attention-is-all-you-need-Paper.pdf",
+            "/Users/nanimahi/multi-doc-chat/data/multi_doc_chat/market_analysis_report.docx"
+        ]
         
-#         uploaded_files = []
+        uploaded_files = [] 
         
-#         for file_path in test_files:
-#             if Path(file_path).exists():
-#                 uploaded_files.append(open(file_path, "rb"))
-#             else:
-#                 print(f"File does not exist: {file_path}")
+        for file_path in test_files:
+            if Path(file_path).exists():
+                uploaded_files.append(open(file_path, "rb"))
+            else:
+                print(f"File does not exist: {file_path}")
                 
-#         if not uploaded_files:
-#             print("No valid files to upload.")
-#             sys.exit(1)
+        if not uploaded_files:
+            print("No valid files to upload.")
+            sys.exit(1)
             
-#         ingestor = DocumentIngestor()
+        ingestor = DocumentIngestor()
         
-#         retriever = ingestor.ingest_files(uploaded_files)
+        retriever = ingestor.ingest_files(uploaded_files)
         
-#         for f in uploaded_files:
-#             f.close()
+        for f in uploaded_files:
+            f.close()
                 
-#         session_id = "test_multi_doc_chat"
+        session_id = "test_multi_doc_chat"
         
-#         rag = ConversationalRAG(session_id=session_id, retriever=retriever)
+        rag = ConversationalRAG(session_id=session_id, retriever=retriever)
         
-#         question = "what is President Zelenskyy said in their speech in parliament?"
+        question = "what is President Zelenskyy said in their speech in parliament?"
         
-#         answer=rag.invoke(question)
+        answer=rag.invoke(question)
         
-#         print("\n Question:", question)
+        print("\n Question:", question)
         
-#         print("Answer:", answer)
+        print("Answer:", answer)
         
-#         if not uploaded_files:
-#             print("No valid files to upload.")
-#             sys.exit(1)
+        if not uploaded_files:
+            print("No valid files to upload.")
+            sys.exit(1)
             
-#     except Exception as e:
-#         print(f"Test failed: {str(e)}")
-#         sys.exit(1)
+    except Exception as e:
+        print(f"Test failed: {str(e)}")
+        sys.exit(1)
         
-# if __name__ == "__main__":
-#     test_document_ingestion_and_rag()
+if __name__ == "__main__":
+    test_document_ingestion_and_rag()
     
     
     
@@ -244,55 +245,55 @@ if __name__ == "__main__":
 
 
 
-{
-  "family": "documentportaltd",
-  "networkMode": "awsvpc",
-  "executionRoleArn": "arn:aws:iam::459497895986:role/ecsTaskExecutionRole",
-  "requiresCompatibilities": ["FARGATE"],
-  "cpu": "1024",
-  "memory": "8192",
-  "containerDefinitions": [
-    {
-      "name": "document-portal-container",
-      "image": "459497895986.dkr.ecr.ap-southeast-2.amazonaws.com/documentportalliveclass",
-      "cpu": 1024,
-      "essential": true,
-      "portMappings": [
-        {
-          "containerPort": 8080,
-          "hostPort": 8080,
-          "protocol": "tcp",
-          "name": "document-portal-container-8080-tcp",
-          "appProtocol": "http"
-        }
-      ],
-      "environment": [
-        {
-          "name": "ENV",
-          "value": "production"
-        }
-      ],
-      "secrets": [
-        {
-          "name": "GROQ_API_KEY",
-          "valueFrom": "arn:aws:secretsmanager:ap-southeast-2:459497895986:secret:api_keys-nZTtj8"
-        },
+# {
+#   "family": "documentportaltd",
+#   "networkMode": "awsvpc",
+#   "executionRoleArn": "arn:aws:iam::459497895986:role/ecsTaskExecutionRole",
+#   "requiresCompatibilities": ["FARGATE"],
+#   "cpu": "1024",
+#   "memory": "8192",
+#   "containerDefinitions": [
+#     {
+#       "name": "document-portal-container",
+#       "image": "459497895986.dkr.ecr.ap-southeast-2.amazonaws.com/documentportalliveclass",
+#       "cpu": 1024,
+#       "essential": True,
+#       "portMappings": [
+#         {
+#           "containerPort": 8080,
+#           "hostPort": 8080,
+#           "protocol": "tcp",
+#           "name": "document-portal-container-8080-tcp",
+#           "appProtocol": "http"
+#         }
+#       ],
+#       "environment": [
+#         {
+#           "name": "ENV",
+#           "value": "production"
+#         }
+#       ],
+#       "secrets": [
+#         {
+#           "name": "GROQ_API_KEY",
+#           "valueFrom": "arn:aws:secretsmanager:ap-southeast-2:459497895986:secret:api_keys-nZTtj8"
+#         },
         
-        {
-          "name": "GOOGLE_API_KEY",
-          "valueFrom": "arn:aws:secretsmanager:ap-southeast-2:459497895986:secret:api_keys-nZTtj8"
-        }
+#         {
+#           "name": "GOOGLE_API_KEY",
+#           "valueFrom": "arn:aws:secretsmanager:ap-southeast-2:459497895986:secret:api_keys-nZTtj8"
+#         }
         
-      ],
-      "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-group": "/ecs/documentportaltd",
-          "awslogs-region": "ap-southeast-2",
-          "awslogs-stream-prefix": "ecs",
-          "awslogs-create-group": "true"
-        }
-      }
-    }
-  ]
-}
+#       ],
+#       "logConfiguration": {
+#         "logDriver": "awslogs",
+#         "options": {
+#           "awslogs-group": "/ecs/documentportaltd",
+#           "awslogs-region": "ap-southeast-2",
+#           "awslogs-stream-prefix": "ecs",
+#           "awslogs-create-group": "true"
+#         }
+#       }
+#     }
+#   ]
+# }
