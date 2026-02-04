@@ -9,6 +9,41 @@ from exception.custom_exception import DocumentPortalException
 from prompt.prompt_library import PROMPT_REGISTRY
 from model.models import SummaryResponse,PromptType
 
+# class DocumentComparatorLLM:
+#     def __init__(self):
+#         load_dotenv()
+#         self.loader = ModelLoader()
+#         self.llm = self.loader.load_llm()
+#         self.parser = JsonOutputParser(pydantic_object=SummaryResponse)
+#         self.fixing_parser = OutputFixingParser.from_llm(parser=self.parser, llm=self.llm)
+#         self.prompt = PROMPT_REGISTRY[PromptType.DOCUMENT_COMPARISON.value]
+#         self.chain = self.prompt | self.llm | self.parser
+#         log.info("DocumentComparatorLLM initialized", model=self.llm)
+
+#     def compare_documents(self, combined_docs: str) -> pd.DataFrame:
+#         try:
+#             inputs = {
+#                 "combined_docs": combined_docs,
+#                 "format_instruction": self.parser.get_format_instructions()
+#             }
+
+#             log.info("Invoking document comparison LLM chain")
+#             response = self.chain.invoke(inputs)
+#             log.info("Chain invoked successfully", response_preview=str(response)[:200])
+#             return self._format_response(response)
+#         except Exception as e:
+#             log.error("Error in compare_documents", error=str(e))
+#             raise DocumentPortalException("Error comparing documents", sys)
+
+#     def _format_response(self, response_parsed: list[dict]) -> pd.DataFrame: #type: ignore
+#         try:
+#             df = pd.DataFrame(response_parsed)
+#             return df
+#         except Exception as e:
+#             log.error("Error formatting response into DataFrame", error=str(e))
+#             DocumentPortalException("Error formatting response", sys)
+
+
 class DocumentComparatorLLM:
     def __init__(self):
         load_dotenv()
@@ -17,7 +52,10 @@ class DocumentComparatorLLM:
         self.parser = JsonOutputParser(pydantic_object=SummaryResponse)
         self.fixing_parser = OutputFixingParser.from_llm(parser=self.parser, llm=self.llm)
         self.prompt = PROMPT_REGISTRY[PromptType.DOCUMENT_COMPARISON.value]
-        self.chain = self.prompt | self.llm | self.parser
+
+        # Use fixing parser
+        self.chain = self.prompt | self.llm | self.fixing_parser
+
         log.info("DocumentComparatorLLM initialized", model=self.llm)
 
     def compare_documents(self, combined_docs: str) -> pd.DataFrame:
@@ -33,12 +71,19 @@ class DocumentComparatorLLM:
             return self._format_response(response)
         except Exception as e:
             log.error("Error in compare_documents", error=str(e))
-            raise DocumentPortalException("Error comparing documents", sys)
+            raise DocumentPortalException("Error comparing documents", e) from e
 
-    def _format_response(self, response_parsed: list[dict]) -> pd.DataFrame: #type: ignore
+    def _format_response(self, response_parsed) -> pd.DataFrame:
         try:
-            df = pd.DataFrame(response_parsed)
-            return df
+            if hasattr(response_parsed, "model_dump"):
+                payload = response_parsed.model_dump()
+            else:
+                payload = response_parsed
+
+            if isinstance(payload, dict):
+                payload = [payload]
+
+            return pd.DataFrame(payload)
         except Exception as e:
             log.error("Error formatting response into DataFrame", error=str(e))
-            DocumentPortalException("Error formatting response", sys)
+            raise DocumentPortalException("Error formatting response", e) from e
