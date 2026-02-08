@@ -273,12 +273,6 @@ class DocumentComparator:
             log.error("Error combining documents", error=str(e), session=self.session_id)
             raise DocumentPortalException("Error combining documents", e) from e
 
-    def clean_old_sessions(self, keep_latest: int = 3):
-        try:
-            sessions = sorted([f for f in self.base_dir.iterdir() if f.is_dir()], reverse=True)
-            for folder in sessions[keep_latest:]:
-                shutil.rmtree(folder, ignore_errors=True)
-                log.info("Old session folder deleted", path=str(folder))
-        except Exception as e:
-            log.error("Error cleaning old sessions", error=str(e))
-            raise DocumentPortalException("Error cleaning old sessions", e) from e
+
+
+

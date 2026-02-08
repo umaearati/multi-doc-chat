@@ -18,9 +18,9 @@ streamlit==1.47.1
 pytest==8.4.1
 pypdf==5.8.0
 cfn-lint
-
-
-
+pandas==2.0.3
+langsmith==0.6.9
+matplotlib==3.7.2
 -e .
 
 
@@ -51,8 +51,7 @@ cfn-lint
 
 
 
-# conda activate /Users/nanimahi/multi-doc-chat/env
-# or
+
 # source /Users/nanimahi/multi-doc-chat/env/bin/activate
 # which python
 # python --version
